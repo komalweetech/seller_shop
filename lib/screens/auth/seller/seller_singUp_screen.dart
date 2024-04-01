@@ -1,8 +1,11 @@
+import 'dart:ffi';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:lottie/lottie.dart';
+import 'package:seller_shop/controllers/seller_singUp_controller.dart';
 import 'package:seller_shop/screens/auth/seller/seller_logIn_screen.dart';
 
 import '../../../utils/app_constant.dart';
@@ -15,6 +18,14 @@ class SellerSingUpScreen extends StatefulWidget {
 }
 
 class _SellerSingUpScreenState extends State<SellerSingUpScreen> {
+  final SellerSingUpController sellerSingUpController = Get.put(SellerSingUpController());
+
+  TextEditingController sellerName = TextEditingController();
+  TextEditingController sellerPhone = TextEditingController();
+  TextEditingController sellerCity = TextEditingController();
+  TextEditingController sellerEmail = TextEditingController();
+  TextEditingController sellerPassword = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +56,7 @@ class _SellerSingUpScreenState extends State<SellerSingUpScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: TextFormField(
+                    controller: sellerName,
                     cursorColor: AppConstant.appSecondPrimaryColor,
                     keyboardType: TextInputType.name,
                     decoration: InputDecoration(
@@ -61,6 +73,7 @@ class _SellerSingUpScreenState extends State<SellerSingUpScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: TextFormField(
+                    controller: sellerPhone,
                     cursorColor: AppConstant.appSecondPrimaryColor,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -77,6 +90,24 @@ class _SellerSingUpScreenState extends State<SellerSingUpScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: TextFormField(
+                    controller: sellerCity,
+                    cursorColor: AppConstant.appSecondPrimaryColor,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        hintText: "city",
+                        prefixIcon: Icon(Icons.location_on),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0))),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                width: Get.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: TextFormField(
+                    controller: sellerEmail,
                     cursorColor: AppConstant.appSecondPrimaryColor,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
@@ -92,16 +123,25 @@ class _SellerSingUpScreenState extends State<SellerSingUpScreen> {
                 width: Get.width,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
-                  child: TextFormField(
-                    cursorColor: AppConstant.appSecondPrimaryColor,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        hintText: "Password",
-                        prefixIcon: Icon(Icons.password),
-                        suffixIcon: Icon(Icons.visibility_off),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0))),
-                  ),
+                  child: Obx(
+                      () => TextFormField(
+                        controller: sellerPassword,
+                        obscureText: SellerSingUpController.isPasswordVisibile.value,
+                        cursorColor: AppConstant.appSecondPrimaryColor,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                            hintText: "Password",
+                            prefixIcon: Icon(Icons.password),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                SellerSingUpController.isPasswordVisibile.toggle();
+                              },
+                                child:SellerSingUpController.isPasswordVisibile.value ?
+                                Icon(Icons.visibility_off) : Icon(Icons.visibility)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0))),
+                      ),
+                  )
                 ),
               ),
               SizedBox(height: Get.height / 40,),
@@ -115,7 +155,41 @@ class _SellerSingUpScreenState extends State<SellerSingUpScreen> {
                     ),
                     child: TextButton(
                       child: Text("SIGN Up",style: TextStyle(color: AppConstant.appTextColor,fontSize: 17),),
-                      onPressed: () {},
+                      onPressed: () async {
+                        String name = sellerName.text.trim();
+                        String phone = sellerPhone.text.trim();
+                        String city = sellerCity.text.trim();
+                        String email = sellerEmail.text.trim();
+                        String password = sellerPassword.text.trim();
+                        String sellerDeviceToken = " ";
+
+                        if(name.isEmpty || phone.isEmpty || city.isEmpty || phone.isEmpty || password.isEmpty) {
+                          Get.snackbar("Error", "Please Enter all Details ",
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: AppConstant.appSecondPrimaryColor,
+                              colorText: AppConstant.appTextColor);
+                        }else{
+                           UserCredential? userCredential = await sellerSingUpController.singUpMethod(
+                               name,
+                               phone,
+                               city,
+                               email,
+                               password,
+                               sellerDeviceToken);
+
+                           if(userCredential != null) {
+                             Get.snackbar("Verification Email sent.", "Please Check your Email.",
+                                 snackPosition: SnackPosition.BOTTOM,
+                                 backgroundColor: AppConstant.appSecondPrimaryColor,
+                                 colorText: AppConstant.appTextColor);
+
+                             FirebaseAuth.instance.signOut();
+
+                             Get.offAll(() =>const SellerLoginScreen());
+                           }
+                        }
+
+                        },
                     ),
                   )
               ),

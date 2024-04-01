@@ -1,8 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:seller_shop/firebase_options.dart';
-import 'package:seller_shop/screens/splash/splash_screen.dart';
+import 'package:seller_shop/screens/auth/seller/seller_logIn_screen.dart';
 
 
 Future<void> main() async {
@@ -22,12 +23,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
+      builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: const SellerLoginScreen(),
     );
   }
 }
