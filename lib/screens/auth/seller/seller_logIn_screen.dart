@@ -24,10 +24,9 @@ class SellerLoginScreen extends StatefulWidget {
 class _SellerLoginScreenState extends State<SellerLoginScreen> {
   @override
   Widget build(BuildContext context) {
-    final SellerSignInController sellerSignInController =
-        Get.put(SellerSignInController());
+    final SellerSignInController sellerSignInController = Get.put(SellerSignInController());
 
-    final GetUserDataController getUserDataController = Get.put(GetUserDataController());
+    // final GetUserDataController getUserDataController = Get.put(GetUserDataController());
 
     TextEditingController sellerEmail = TextEditingController();
     TextEditingController sellerPassword = TextEditingController();
@@ -131,7 +130,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: TextButton(
-                      child: Text(
+                      child: const Text(
                         "SIGN IN",
                         style: TextStyle(
                             color: AppConstant.appTextColor, fontSize: 17),
@@ -152,21 +151,21 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                           UserCredential? userCredential =
                               await sellerSignInController.singInMethod(email, password);
 
-                          var userData = await getUserDataController.getUserData(userCredential!.user!.uid);
+                          // var userData = await getUserDataController.getUserData(userCredential!.user!.uid);
                           if (userCredential != null) {
                             // for check user id Admin or user
-                            if(userData[0]['isAdmin'] == true){
-                              Get.snackbar("Success login for Admin side",
-                                  "login Successfully ",
-                                  snackPosition: SnackPosition.BOTTOM,
-                                  backgroundColor:
-                                  AppConstant.appSecondPrimaryColor,
-                                  colorText: AppConstant.appTextColor);
-
-                              Get.offAll(() => AdminMainScreen());
-                            }else {
-                              Get.offAll(DashBoardScreen());
-                            }
+                            // if(userData[0]['isAdmin'] == true){
+                            //   Get.snackbar("Success login for Admin side",
+                            //       "login Successfully ",
+                            //       snackPosition: SnackPosition.BOTTOM,
+                            //       backgroundColor:
+                            //       AppConstant.appSecondPrimaryColor,
+                            //       colorText: AppConstant.appTextColor);
+                            //
+                            //   Get.offAll(() => AdminMainScreen());
+                            // }else {
+                            //   Get.offAll(DashBoardScreen());
+                            // }
                             log("login successfuly");
                             Get.snackbar("Success", "login Successfully ",
                                       snackPosition: SnackPosition.BOTTOM,

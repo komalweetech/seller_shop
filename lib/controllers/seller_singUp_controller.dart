@@ -20,7 +20,7 @@ class SellerSingUpController extends GetxController {
     String sellerCity,
     String sellerEmail,
     String sellerPassword,
-    String sellerDeviceToken,
+    // String sellerDeviceToken,
   ) async {
     try {
     EasyLoading.show(status: 'Please wait');
@@ -31,7 +31,7 @@ class SellerSingUpController extends GetxController {
       await userCredential.user!.sendEmailVerification();
 
       SellerModel sellerModel = SellerModel(
-        sellerDeviceToken: sellerDeviceToken,
+        // sellerDeviceToken: sellerDeviceToken,
         sId: userCredential.user!.uid,
         name: sellerName,
         phone: sellerPhone,

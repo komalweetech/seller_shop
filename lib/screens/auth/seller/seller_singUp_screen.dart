@@ -175,7 +175,8 @@ class _SellerSingUpScreenState extends State<SellerSingUpScreen> {
                                city,
                                email,
                                password,
-                               sellerDeviceToken);
+                               // sellerDeviceToken
+                           );
 
                            if(userCredential != null) {
                              Get.snackbar("Verification Email sent.", "Please Check your Email.",

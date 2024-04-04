@@ -9,13 +9,14 @@ class SellerModel {
  final String city;
  final String email;
  final String password;
- final String sellerDeviceToken;
+ // final String sellerDeviceToken;
  final bool isAdmin;
  final bool isActive;
  final dynamic createdOn;
 
   SellerModel(
-      {required this.sellerDeviceToken,
+      {
+        // required this.sellerDeviceToken,
         required this.sId,
         required this.name,
       required this.phone,
@@ -37,13 +38,13 @@ class SellerModel {
     'isAdmin' : isAdmin,
     'isActive' : isActive,
     'createdOn' : createdOn,
-    'sellerDeviceToken' : sellerDeviceToken
+    // 'sellerDeviceToken' : sellerDeviceToken
   };
   }
 
   factory SellerModel.fromMap(Map<String,dynamic> json) {
     return SellerModel(
-      sellerDeviceToken:json['sellerDeviceToken'] ,
+      // sellerDeviceToken:json['sellerDeviceToken'] ,
         sId:json['sId'],
         name: json['name'],
         phone: json['phone'],

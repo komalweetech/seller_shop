@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:seller_shop/firebase_options.dart';
 import 'package:seller_shop/screens/auth/seller/seller_logIn_screen.dart';
+import 'package:seller_shop/screens/splash/splash_screen.dart';
 
 
 Future<void> main() async {
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const SellerLoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }
