@@ -35,7 +35,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppConstant.appSecondPrimaryColor,
-            title: Text(
+            title: const Text(
               "SignIn",
               style: TextStyle(color: AppConstant.appTextColor),
             ),
@@ -47,7 +47,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
               child: Column(
                 children: [
                   isKeyboardVisible
-                      ? SizedBox()
+                      ? const SizedBox()
                       : Container(
                           width: Get.width,
                           color: AppConstant.appSecondPrimaryColor,

@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:seller_shop/screens/drower/current_order_screen.dart';
+import 'package:seller_shop/screens/drower/finance_control.dart';
+import 'package:seller_shop/screens/drower/previous_order_screen.dart';
+import 'package:seller_shop/screens/drower/status_update_screen.dart';
 import 'package:seller_shop/utils/app_constant.dart';
 
 class DrawerWidget extends StatelessWidget {
@@ -52,7 +56,7 @@ class DrawerWidget extends StatelessWidget {
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20.0),
                 bottomRight: Radius.circular(20.0))),
-        backgroundColor: AppConstant.appSecondPrimaryColor,
+        backgroundColor: AppConstant.appTextColor,
         child: Wrap(
           runSpacing: 10,
           children: [
@@ -61,11 +65,11 @@ class DrawerWidget extends StatelessWidget {
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
                 title: Text(
-                  "Setting",
-                  style: TextStyle(color: AppConstant.appTextColor),
+                  "Name",
+                  style: TextStyle(color: AppConstant.appPrimaryColor),
                 ),
                 subtitle: Text('Version 1.0.1',
-                    style: TextStyle(color: AppConstant.appTextColor)),
+                    style: TextStyle(color: AppConstant.appPrimaryColor)),
                 leading: CircleAvatar(
                   radius: 22.0,
                   backgroundColor: AppConstant.appPrimaryColor,
@@ -86,55 +90,78 @@ class DrawerWidget extends StatelessWidget {
               ),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
-                title: Text("Home",
-                    style: TextStyle(color: AppConstant.appTextColor)),
+                title: Text("Profile",
+                    style: TextStyle(color: AppConstant.appPrimaryColor)),
                 leading: Icon(
-                  Icons.home,
-                  color: AppConstant.appTextColor,
+                  Icons.person,
+                  color: AppConstant.appPrimaryColor,
                 ),
                 trailing:
-                    Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+                    Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(
+             Padding(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
               ),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
-                title: Text("Total Product",
-                    style: TextStyle(color: AppConstant.appTextColor)),
-                leading: Icon(Icons.production_quantity_limits,
-                    color: AppConstant.appTextColor),
+                title: const Text("Current Orders",
+                    style: TextStyle(color: AppConstant.appPrimaryColor)),
+                leading: const Icon(Icons.production_quantity_limits,
+                    color: AppConstant.appPrimaryColor),
                 trailing:
-                    Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+                    const Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                onTap: () {
+                  Get.to(const CurrentOrderScreen());
+                },
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(
+             Padding(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
               ),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
-                title: Text("Total Orders",
-                    style: TextStyle(color: AppConstant.appTextColor)),
+                title: const Text("Previous Orders",
+                    style: TextStyle(color: AppConstant.appPrimaryColor)),
                 leading:
-                    Icon(Icons.shopping_bag, color: AppConstant.appTextColor),
+                    const Icon(Icons.add_shopping_cart, color: AppConstant.appPrimaryColor),
                 trailing:
-                    Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+                    const Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                onTap: () {
+                  Get.to(const PreviousOrderScreen());
+                },
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(
+             Padding(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
               ),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
-                title: Text("Contact",
-                    style: TextStyle(color: AppConstant.appTextColor)),
-                leading: Icon(Icons.help, color: AppConstant.appTextColor),
-                trailing:
-                    Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+                title: const Text("Status Update",
+                    style: TextStyle(color: AppConstant.appPrimaryColor)),
+                leading: const Icon(Icons.help, color: AppConstant.appPrimaryColor),
+                trailing: const Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                onTap: () {
+                  Get.to(const StatusUpdateScreen());
+                },
+              ),
+            ),
+             Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+              ),
+              child: ListTile(
+                titleAlignment: ListTileTitleAlignment.center,
+                title: const Text("Finance Order",
+                    style: TextStyle(color: AppConstant.appPrimaryColor)),
+                leading: Icon(Icons.help, color: AppConstant.appPrimaryColor),
+                trailing: Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                onTap: () {
+                  Get.to(FinanceControl());
+                } ,
               ),
             ),
             Padding(
@@ -147,10 +174,10 @@ class DrawerWidget extends StatelessWidget {
                 },
                 titleAlignment: ListTileTitleAlignment.center,
                 title: const Text("Log Out",
-                    style: TextStyle(color: AppConstant.appTextColor)),
-                leading: Icon(Icons.logout, color: AppConstant.appTextColor),
+                    style: TextStyle(color: AppConstant.appPrimaryColor)),
+                leading: Icon(Icons.logout, color: AppConstant.appPrimaryColor),
                 trailing:
-                    Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+                    Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
               ),
             ),
           ],

@@ -29,17 +29,35 @@ class _CardWidgetState extends State<CardWidget> {
                 spreadRadius: 6,
                 offset: Offset(0, 10))
           ]),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const SizedBox(height: 6),
-          SizedBox(height: 3),
-          Text(widget.name!,style: TextStyle(color: Colors.black),),
-          Text(widget.subName!,style: TextStyle(color: Colors.black),),
-          Text(widget.amount!,style: TextStyle(color: Colors.black),),
-          Text(widget.disc!,style: TextStyle(color: Colors.black),),
-          SizedBox(height: 4),
-        ],
+      child: Padding(
+        padding:  EdgeInsets.only(left: 15.0,top: 04.0,bottom: 04.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 6),
+            SizedBox(height: 3),
+            Text("Name: ${widget.name!}",style: TextStyle(color: Colors.black),),
+            SizedBox(height: 05,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Total Price:',style: TextStyle(color: Colors.black)),
+                Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.amount!,style: TextStyle(color: Colors.black),),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 4),
+          ],
+        ),
       ),
     );
   }
