@@ -34,7 +34,7 @@ class _FinanceControlState extends State<FinanceControl> {
         .get();
     setState(() {
       totalProduct = querySnapshot.size;
-      print("all Previous orders =  $previousOrderCount" );
+      print("all Previous orders =  $totalProduct" );
     });
   }
   // get all product price.

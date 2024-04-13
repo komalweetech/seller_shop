@@ -26,6 +26,44 @@ class _SellerSingUpScreenState extends State<SellerSingUpScreen> {
   TextEditingController sellerEmail = TextEditingController();
   TextEditingController sellerPassword = TextEditingController();
 
+  void createAccount() async {
+    String name = sellerName.text.trim();
+    String phone = sellerPhone.text.trim();
+    String city = sellerCity.text.trim();
+    String email = sellerEmail.text.trim();
+    String password = sellerPassword.text.trim();
+    String sellerDeviceToken = " ";
+
+    if (name.isEmpty || phone.isEmpty || city.isEmpty || phone.isEmpty ||
+        password.isEmpty) {
+      Get.snackbar("Error", "Please Enter all Details ",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppConstant.appSecondPrimaryColor,
+          colorText: AppConstant.appTextColor);
+    } else {
+      UserCredential? userCredential = await sellerSingUpController
+          .singUpMethod(
+        name,
+        phone,
+        city,
+        email,
+        password,
+        // sellerDeviceToken
+      );
+
+      if (userCredential != null) {
+        Get.snackbar("Verification Email sent.", "Please Check your Email.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppConstant.appSecondPrimaryColor,
+            colorText: AppConstant.appTextColor);
+
+        FirebaseAuth.instance.signOut();
+
+        Get.offAll(() => const SellerLoginScreen());
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +83,7 @@ class _SellerSingUpScreenState extends State<SellerSingUpScreen> {
               SizedBox(height: Get.height /20,),
               Container(
                 alignment: Alignment.center,
-                child: Text("Welcome to my app",style: TextStyle(
+                child: const Text("Welcome to my app",style: TextStyle(
                     fontWeight: FontWeight.bold,
                 fontSize: 16,color: AppConstant.appSecondPrimaryColor),),
               ),

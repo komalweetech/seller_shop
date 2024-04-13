@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../../models/product_model.dart';
 import '../../utils/app_constant.dart';
 import '../../widgets/card_widget.dart';
 import '../products_details/detail_screen.dart';
@@ -36,14 +37,26 @@ class _TotalProductState extends State<TotalProduct> {
           return ListView.separated(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              DocumentSnapshot document = snapshot.data!.docs[index];
-              Map<String, dynamic> data =
-              document.data() as Map<String, dynamic>;
-              String imageUrl = data['productImages'][0] ?? '';
-              String name = data['productName'] ?? '';
-              String subName = data['createdAt'] ?? '';
-              String amount = data['fullPrice'] ?? '';
-              String description = data['productDescription'] ?? '';
+              print("document data = ${snapshot.data!.docs[index]}");
+              final productData = snapshot.data!.docs[index];
+              ProductModel productModel = ProductModel(
+                productId: productData['productId'],
+                productName: productData['productName'],
+                fullPrice: productData['fullPrice'],
+                productImages: productData['productImages'],
+                deliveryTime: productData['deliveryTime'],
+                productDescription: productData['productDescription'],
+                createdAt: productData['createdAt'],
+                updatedAt: productData['updatedAt'],
+              );
+              // DocumentSnapshot document = snapshot.data!.docs[index];
+              // Map<String, dynamic> data =
+              // document.data() as Map<String, dynamic>;
+              // String imageUrl = data['imageUrl'][0] ?? '';
+              // String name = data['productName'] ?? '';
+              // String subName = data['createdAt'] ?? '';
+              // String amount = data['fullPrice'] ?? '';
+              // String description = data['productDescription'] ?? '';
               return Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 15.0, horizontal: 20.0),
@@ -70,16 +83,12 @@ class _TotalProductState extends State<TotalProduct> {
                         borderRadius: BorderRadius.circular(7),
                         onTap: () {
                           Get.to(DetailScreen(
-                            image: imageUrl,
-                            name: name,
-                            subName: subName,
-                            amount: amount,
-                            disc: description,
+                           productModel: productModel,
                           ));
                         },
                         onLongPress: () {
                           _showDeleteConfirmationDialog(
-                              context, document.reference);
+                              context, productData.reference);
                         },
                         child: Stack(
                           children: [
@@ -89,7 +98,7 @@ class _TotalProductState extends State<TotalProduct> {
                                 height: Get.height / 3,
                                 width: Get.width,
                                 child: Image.network(
-                                  imageUrl, fit: BoxFit.cover,),
+                                  productModel.productImages.first, fit: BoxFit.cover,),
                               ),
                             ),
                             Positioned(
@@ -97,9 +106,9 @@ class _TotalProductState extends State<TotalProduct> {
                               left: 10,
                               right: 10,
                               child: CardWidget(
-                                name: name,
-                                subName: subName,
-                                amount: amount,),
+                                name: productModel.productName,
+                                subName: productModel.createdAt,
+                                amount: productModel.fullPrice,),
                             )
                           ],
                         ),

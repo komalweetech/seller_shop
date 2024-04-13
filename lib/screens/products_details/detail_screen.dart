@@ -1,39 +1,82 @@
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:seller_shop/models/product_model.dart';
+import 'package:seller_shop/screens/products_details/update_product_details.dart';
 import '../../utils/app_constant.dart';
 
 class DetailScreen extends StatefulWidget {
-  const DetailScreen(
-      {super.key,
-      required this.image,
-      required this.name,
-      required this.subName,
-      required this.amount,
-      required this.disc});
+  const DetailScreen({super.key, required this.productModel});
 
-  final String image;
-  final String name;
-  final String subName;
-  final String amount;
-  final String disc;
+  final ProductModel productModel;
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
 }
 
-int index = 0;
-List<String> img = [
-  "assets/images/ic_shoes_7.png",
-  "assets/images/ic_shoes_9.png",
-  "assets/images/ic_shoes_2.png",
-];
-
-
 class _DetailScreenState extends State<DetailScreen> {
+  int selectedIndex = 0;
+
+  @override
+  void setState(fn) {
+    if (mounted) super.setState(fn);
+  }
+
   @override
   Widget build(BuildContext context) {
+    // delete dialog
+    Future<void> _showDeleteDialog() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Delete Product'),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Are you sure you want to delete this product?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
+                ),
+                onPressed: () async {
+                  Navigator.of(context).pop(); // Close the dialog
+                  // Delete the product from Firestore
+                  await FirebaseFirestore.instance
+                      .collection('products')
+                      .doc(widget.productModel.productId)
+                      .delete()
+                      .then((_) {
+                    Get.back(); // Navigate back to previous screen
+                  }).catchError((error) {
+                    // Error while deleting
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error: $error')),
+                    );
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: AppConstant.appTextColor),
@@ -48,12 +91,17 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
         actions: [
           Padding(
-            padding:  EdgeInsets.only(right: 10.0),
+            padding: EdgeInsets.only(right: 10.0),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+_showDeleteDialog();
+              },
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.delete,size: 30,),
+                child: Icon(
+                  Icons.delete,
+                  size: 30,
+                ),
               ),
             ),
           ),
@@ -62,19 +110,60 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
               padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3)),
               child: Column(
                 children: [
                   Image(
-                    image: NetworkImage(widget.image),
+                    image: NetworkImage(
+                        widget.productModel.productImages[selectedIndex]),
                     height: 250,
                     width: MediaQuery.of(context).size.width,
                     fit: BoxFit.cover,
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: widget.productModel.productImages.map((image) {
+                      return InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        radius: 8,
+                        onTap: () {
+                          setState(() {
+                            selectedIndex = widget.productModel.productImages
+                                .indexOf(image);
+                          });
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            // color: AppConstant.appTextColor,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: widget.productModel.productImages
+                                          .indexOf(image) ==
+                                      selectedIndex
+                                  ? Colors.red
+                                  : Colors.transparent,
+                            ),
+                          ),
+                          child: Image(
+                              image: NetworkImage(image),
+                              height: 40,
+                              width: 40,
+                              fit: BoxFit.cover),
+                        ),
+                      ); //.paddingRight(8);
+                    }).toList(),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -87,7 +176,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.name,
+                  Text(widget.productModel.productName,
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.clip,
                       style: TextStyle(fontWeight: FontWeight.w700)),
@@ -98,12 +187,12 @@ class _DetailScreenState extends State<DetailScreen> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        widget.subName,
+                        widget.productModel.createdAt,
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.clip,
                         style: TextStyle(fontWeight: FontWeight.w700),
                       ),
-                      Text(widget.amount,
+                      Text("\$ ${widget.productModel.fullPrice}",
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.clip,
                           style: TextStyle(fontWeight: FontWeight.w700)),
@@ -195,9 +284,26 @@ class _DetailScreenState extends State<DetailScreen> {
                       style: TextStyle(fontWeight: FontWeight.w900)),
                   const SizedBox(height: 8),
                   Text(
-                    widget.disc,
+                    widget.productModel.productDescription,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.clip,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppConstant.appPrimaryColor),
+                      onPressed: ()  async {
+                     await Get.to(UpdateProductDetails(productModel: widget.productModel,));
+                      },
+                      child: const Text(
+                        'Update this Product',
+                        style: TextStyle(color: AppConstant.appTextColor),
+                      ),
+                    ),
                   ),
                 ],
               ),

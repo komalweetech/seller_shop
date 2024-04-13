@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:seller_shop/utils/app_constant.dart';
 
 class AddProducts extends StatefulWidget {
@@ -14,35 +14,65 @@ class AddProducts extends StatefulWidget {
 }
 
 class _AddProductsState extends State<AddProducts> {
-  final TextEditingController _imageController = TextEditingController();
+  final TextEditingController _image0Controller = TextEditingController();
+  final TextEditingController _image1Controller = TextEditingController();
+  final TextEditingController _image2Controller = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _subNameController = TextEditingController();
+  final TextEditingController _createAtController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _productIdController = TextEditingController();
+  final TextEditingController _deliveryTimeController = TextEditingController();
+  final TextEditingController _updatedAtController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
   void _addItem() {
-    String imageUrl = _imageController.text.trim();
+    String image0Url = _image0Controller.text.trim();
+    String image1Url = _image1Controller.text.trim();
+    String image2Url = _image2Controller.text.trim();
     String name = _nameController.text.trim();
-    String subName = _subNameController.text.trim();
+    String createAt = _createAtController.text.trim();
     String amount = _amountController.text.trim();
+    String productId = _productIdController.text.trim();
+    String deliveryTime = _productIdController.text.trim();
+    String updatedAt = _productIdController.text.trim();
     String description = _descriptionController.text.trim();
 
-    if (name.isNotEmpty && description.isNotEmpty) {
+    List<String> imageUrls = [image0Url, image1Url,image2Url];
+    if (name.isNotEmpty ||
+        description.isNotEmpty ||
+        image0Url.isNotEmpty ||
+        image1Url.isNotEmpty  ||
+        image2Url.isNotEmpty ||
+        createAt.isNotEmpty ||
+        productId.isNotEmpty ||
+        deliveryTime.isNotEmpty ||
+        updatedAt.isNotEmpty ||
+        amount.isNotEmpty
+    ) {
       // Add item to Firestore
       FirebaseFirestore.instance.collection('items').add({
-        'imageUrl' : imageUrl,
-        'name': name,
-        'subName' : subName,
-        'amount' : amount,
-        'description': description,
+        'productId' : productId,
+        'productName': name,
+        'fullPrice' : amount,
+        'productImages' : imageUrls,
+        'deliveryTime' : deliveryTime,
+        'productDescription': description,
+        'createdAt' : createAt,
+        'updatedAt' : updatedAt,
+
+
       }).then((_) {
         // Clear text fields after successful addition
-        _imageController.clear();
+        _image0Controller.clear();
+        _image1Controller.clear();
+        _image2Controller.clear();
         _nameController.clear();
-        _subNameController.clear();
+        _createAtController.clear();
         _amountController.clear();
+        _productIdController.clear();
+        _updatedAtController.clear();
+        _deliveryTimeController.clear();
         _descriptionController.clear();
-
 
         Get.snackbar("Item", "Item added successfully",
             snackPosition: SnackPosition.BOTTOM,
@@ -84,17 +114,20 @@ class _AddProductsState extends State<AddProducts> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Align(
+                alignment: Alignment.topLeft,
+                  child: Text('Images')),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 3.0),
                 width: Get.width,
                 child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(15),
                   child: TextFormField(
-                    controller: _imageController,
+                    controller: _image0Controller,
                     cursorColor: AppConstant.appSecondPrimaryColor,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
-                      labelText: "image Url",
+                      labelText: "image 0",
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0))),
                   ),
@@ -104,7 +137,39 @@ class _AddProductsState extends State<AddProducts> {
                 margin: EdgeInsets.symmetric(horizontal: 3.0),
                 width: Get.width,
                 child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(15),
+                  child: TextFormField(
+                    controller: _image1Controller,
+                    cursorColor: AppConstant.appSecondPrimaryColor,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        labelText: "image 1",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0))),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 3.0),
+                width: Get.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: TextFormField(
+                    controller: _image2Controller,
+                    cursorColor: AppConstant.appSecondPrimaryColor,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        labelText: "image 2",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0))),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 3.0),
+                width: Get.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(06),
                   child: TextFormField(
                     controller: _nameController,
                     cursorColor: AppConstant.appSecondPrimaryColor,
@@ -120,23 +185,7 @@ class _AddProductsState extends State<AddProducts> {
                 margin: EdgeInsets.symmetric(horizontal: 3.0),
                 width: Get.width,
                 child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: TextFormField(
-                    controller: _subNameController,
-                    cursorColor: AppConstant.appSecondPrimaryColor,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                        labelText: "Sub Name",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0))),
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 3.0),
-                width: Get.width,
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(06),
                   child: TextFormField(
                     controller: _amountController,
                     cursorColor: AppConstant.appSecondPrimaryColor,
@@ -152,7 +201,71 @@ class _AddProductsState extends State<AddProducts> {
                 margin: EdgeInsets.symmetric(horizontal: 3.0),
                 width: Get.width,
                 child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(06),
+                  child: TextFormField(
+                    controller: _productIdController,
+                    cursorColor: AppConstant.appSecondPrimaryColor,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        labelText: "Product Id",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0))),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 3.0),
+                width: Get.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(06),
+                  child: TextFormField(
+                    controller: _createAtController,
+                    cursorColor: AppConstant.appSecondPrimaryColor,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        labelText: "Create At",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0))),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 3.0),
+                width: Get.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(06),
+                  child: TextFormField(
+                    controller: _deliveryTimeController,
+                    cursorColor: AppConstant.appSecondPrimaryColor,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        labelText: "DeliveryTime",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0))),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 3.0),
+                width: Get.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(06),
+                  child: TextFormField(
+                    controller: _updatedAtController,
+                    cursorColor: AppConstant.appSecondPrimaryColor,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        labelText: "UpdatedAt",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0))),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 3.0),
+                width: Get.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(06),
                   child: TextFormField(
                     controller: _descriptionController,
                     cursorColor: AppConstant.appSecondPrimaryColor,

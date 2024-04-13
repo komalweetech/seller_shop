@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:seller_shop/screens/bottombar/chart_screen.dart';
 import 'package:seller_shop/screens/bottombar/total_orders.dart';
 import 'package:seller_shop/screens/bottombar/total_product.dart';
 import 'package:seller_shop/screens/bottombar/total_profit.dart';
+import 'package:seller_shop/screens/home/add_products.dart';
 
 import '../../utils/app_constant.dart';
 import '../../widgets/drawer_widget.dart';
@@ -51,10 +54,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: GestureDetector(
-              // onTap: () => Get.to(),
+              onTap: () => Get.to(AddProducts()),
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.shopping_bag_outlined),
+                child: Icon(Icons.add),
               ),
             ),
           ),

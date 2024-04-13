@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:seller_shop/screens/auth/seller/seller_singUp_screen.dart';
+import 'package:seller_shop/screens/auth/seller/update_Profile_screen.dart';
+import 'package:seller_shop/screens/drower/company_screen.dart';
 import 'package:seller_shop/screens/drower/current_order_screen.dart';
 import 'package:seller_shop/screens/drower/finance_control.dart';
 import 'package:seller_shop/screens/drower/previous_order_screen.dart';
@@ -19,22 +22,22 @@ class DrawerWidget extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Sign Out'),
-            content: Text('Are you sure you want to sign out?'),
+            title: const Text('Sign Out'),
+            content: const Text('Are you sure you want to sign out?'),
             actions: <Widget>[
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: AppConstant.appPrimaryColor),
                 onPressed: () {
                   Navigator.of(context).pop(); // Close the dialog
                 },
-                child: Text('Cancel',style: TextStyle(color: AppConstant.appTextColor),),
+                child: const Text('Cancel',style: TextStyle(color: AppConstant.appTextColor),),
               ),
               ElevatedButton(
                 onPressed: () async {
                   try {
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context).pop(); // Close the dialog
-                    // Navigate to the login screen or any other screen after sign-out
+                    Get.to(SellerSingUpScreen());
                   } catch (e) {
                     print("Error signing out: $e");
                     // Handle sign-out errors
@@ -47,7 +50,6 @@ class DrawerWidget extends StatelessWidget {
         },
       );
     }
-
 
     return Padding(
       padding: EdgeInsets.only(top: Get.height / 25),
@@ -66,7 +68,7 @@ class DrawerWidget extends StatelessWidget {
                 titleAlignment: ListTileTitleAlignment.center,
                 title: Text(
                   "Name",
-                  style: TextStyle(color: AppConstant.appPrimaryColor),
+                  style: TextStyle(color: AppConstant.appPrimaryColor,fontWeight: FontWeight.w700),
                 ),
                 subtitle: Text('Version 1.0.1',
                     style: TextStyle(color: AppConstant.appPrimaryColor)),
@@ -84,20 +86,23 @@ class DrawerWidget extends StatelessWidget {
               thickness: 1.5,
               color: Colors.grey,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(
+             Padding(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
               ),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
-                title: Text("Profile",
+                title: const Text("Profile",
                     style: TextStyle(color: AppConstant.appPrimaryColor)),
-                leading: Icon(
+                leading: const Icon(
                   Icons.person,
                   color: AppConstant.appPrimaryColor,
                 ),
                 trailing:
-                    Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                    const Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                onTap: () {
+                  Get.to(const UpdateProfileScreen());
+                },
               ),
             ),
              Padding(
@@ -161,6 +166,21 @@ class DrawerWidget extends StatelessWidget {
                 trailing: Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
                 onTap: () {
                   Get.to(FinanceControl());
+                } ,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+              ),
+              child: ListTile(
+                titleAlignment: ListTileTitleAlignment.center,
+                title: const Text("Company",
+                    style: TextStyle(color: AppConstant.appPrimaryColor)),
+                leading: Icon(Icons.branding_watermark, color: AppConstant.appPrimaryColor),
+                trailing: Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                onTap: () {
+                  Get.to(CompanyScreen());
                 } ,
               ),
             ),
