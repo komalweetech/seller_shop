@@ -42,7 +42,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
             ),
             actions: <Widget>[
-              TextButton(
+              ElevatedButton(
                 child: const Text('Cancel'),
                 onPressed: () {
                   Navigator.of(context).pop();

@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:seller_shop/controllers/get_user_data_controller.dart';
-import 'package:seller_shop/screens/admin/admin_main_screen.dart';
 import 'package:seller_shop/screens/home/dashboard_screen.dart';
 import 'package:seller_shop/screens/splash/welcome_screen.dart';
 

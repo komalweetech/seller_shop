@@ -1,18 +1,17 @@
+
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:seller_shop/controllers/get_user_data_controller.dart';
 import 'package:seller_shop/controllers/seller_signIn_controller.dart';
 import 'package:seller_shop/screens/auth/seller/forgotpassword_screen.dart';
-import 'package:seller_shop/screens/auth/seller/seller_singUp_screen.dart';
 import 'package:seller_shop/screens/home/dashboard_screen.dart';
 import 'package:seller_shop/utils/app_constant.dart';
-import 'package:seller_shop/screens/admin/admin_main_screen.dart';
 
 class SellerLoginScreen extends StatefulWidget {
   const SellerLoginScreen({super.key});
@@ -49,12 +48,12 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                   isKeyboardVisible
                       ? const SizedBox()
                       : Container(
-                          width: Get.width,
-                          color: AppConstant.appSecondPrimaryColor,
-                          child: Lottie.asset(
-                            "assets/images/login.json",
-                          ),
-                        ),
+                    width: Get.width,
+                    color: AppConstant.appSecondPrimaryColor,
+                    child: Lottie.asset(
+                      "assets/images/login.json",
+                    ),
+                  ),
                   SizedBox(
                     height: Get.height / 20,
                   ),
@@ -81,10 +80,10 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                     child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Obx(
-                          () => TextFormField(
+                              () => TextFormField(
                             controller: sellerPassword,
                             obscureText:
-                                SellerSignInController.isPasswordVisibile.value,
+                            SellerSignInController.isPasswordVisibile.value,
                             cursorColor: AppConstant.appSecondPrimaryColor,
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
@@ -96,7 +95,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                                         .toggle();
                                   },
                                   child: SellerSignInController
-                                          .isPasswordVisibile.value
+                                      .isPasswordVisibile.value
                                       ? Icon(Icons.visibility_off)
                                       : Icon(Icons.visibility),
                                 ),
@@ -123,89 +122,90 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                   ),
                   Material(
                       child: Container(
-                    width: Get.width / 1.2,
-                    height: Get.height / 15,
-                    decoration: BoxDecoration(
-                      color: AppConstant.appSecondPrimaryColor,
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: TextButton(
-                      child: const Text(
-                        "SIGN IN",
-                        style: TextStyle(
-                            color: AppConstant.appTextColor, fontSize: 17),
-                      ),
-                      onPressed: () async {
-                        String email = sellerEmail.text.trim();
-                        String password = sellerPassword.text.trim();
+                        width: Get.width / 1.2,
+                        height: Get.height / 15,
+                        decoration: BoxDecoration(
+                          color: AppConstant.appSecondPrimaryColor,
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: TextButton(
+                          child: const Text(
+                            "SIGN IN",
+                            style: TextStyle(
+                                color: AppConstant.appTextColor, fontSize: 17),
+                          ),
+                          onPressed: () async {
+                            String email = sellerEmail.text.trim();
+                            String password = sellerPassword.text.trim();
 
-                        if (email.isEmpty || password.isEmpty) {
-                          log("Please Fill all the Details");
-                          Get.snackbar("Error", "Please Enter all Details ",
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor:
+                            if (email.isEmpty || password.isEmpty) {
+                              log("Please Fill all the Details");
+                              Get.snackbar("Error", "Please Enter all Details ",
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  backgroundColor:
                                   AppConstant.appSecondPrimaryColor,
-                              colorText: AppConstant.appTextColor);
-                        } else {
-                          log("userCredential");
-                          UserCredential? userCredential =
+                                  colorText: AppConstant.appTextColor);
+                            } else {
+                              log("userCredential");
+                              UserCredential? userCredential =
                               await sellerSignInController.singInMethod(email, password);
 
-                          // var userData = await getUserDataController.getUserData(userCredential!.user!.uid);
-                          if (userCredential != null) {
-                            // for check user id Admin or user
-                            // if(userData[0]['isAdmin'] == true){
-                            //   Get.snackbar("Success login for Admin side",
-                            //       "login Successfully ",
-                            //       snackPosition: SnackPosition.BOTTOM,
-                            //       backgroundColor:
-                            //       AppConstant.appSecondPrimaryColor,
-                            //       colorText: AppConstant.appTextColor);
-                            //
-                            //   Get.offAll(() => AdminMainScreen());
-                            // }else {
-                            //   Get.offAll(DashBoardScreen());
-                            // }
-                            log("login successfuly");
-                            Get.snackbar("Success", "login Successfully ",
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor:
-                                          AppConstant.appSecondPrimaryColor,
-                                      colorText: AppConstant.appTextColor);
 
-                            Get.offAll(() => const DashBoardScreen());
-                          } else {
-                            Get.snackbar("Error", "Please try again",
-                                snackPosition: SnackPosition.BOTTOM,
-                                backgroundColor:
+                              if (userCredential != null) {
+                                log("login successfully as admin");
+                                Get.snackbar("Success", "Login Successfully as admin",
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    backgroundColor: AppConstant.appSecondPrimaryColor,
+                                    colorText: AppConstant.appTextColor);
+                                Get.offAll(() => const DashBoardScreen());
+                               // // for check user id Admin or user
+                               //  bool isAdmin = await sellerSignInController.checkAdminStatus(userCredential.user!.uid);
+                               //  if (isAdmin) {
+                               //    log("login successfully as admin");
+                               //    Get.snackbar("Success", "Login Successfully as admin",
+                               //        snackPosition: SnackPosition.BOTTOM,
+                               //        backgroundColor: AppConstant.appSecondPrimaryColor,
+                               //        colorText: AppConstant.appTextColor);
+                               //    Get.offAll(() => const DashBoardScreen());
+                               //  } else {
+                               //    log("not an admin");
+                               //    Get.snackbar("Error", "You are not authorized to access this panel",
+                               //        snackPosition: SnackPosition.BOTTOM,
+                               //        backgroundColor: AppConstant.appSecondPrimaryColor,
+                               //        colorText: AppConstant.appTextColor);
+                               //  }
+                              } else {
+                                Get.snackbar("Error", "Please try again",
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    backgroundColor:
                                     AppConstant.appSecondPrimaryColor,
-                                colorText: AppConstant.appTextColor);
-                          }
-                        }
-                      },
-                    ),
-                  )),
+                                    colorText: AppConstant.appTextColor);
+                              }
+                            }
+                          },
+                        ),
+                      )),
                   SizedBox(
                     height: Get.height / 40,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an account?",
-                        style:
-                            TextStyle(color: AppConstant.appSecondPrimaryColor),
-                      ),
-                      GestureDetector(
-                        onTap: () => Get.offAll(SellerSingUpScreen()),
-                        child: Text(
-                          "Sign Up",
-                          style: TextStyle(
-                              color: AppConstant.appSecondPrimaryColor),
-                        ),
-                      ),
-                    ],
-                  )
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       "Don't have an account?",
+                  //       style:
+                  //       TextStyle(color: AppConstant.appSecondPrimaryColor),
+                  //     ),
+                  //     GestureDetector(
+                  //       onTap: () => Get.offAll(SellerSingUpScreen()),
+                  //       child: Text(
+                  //         "Sign Up",
+                  //         style: TextStyle(
+                  //             color: AppConstant.appSecondPrimaryColor),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // )
                 ],
               ),
             ),

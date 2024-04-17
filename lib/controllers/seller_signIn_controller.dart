@@ -1,3 +1,4 @@
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,4 +35,23 @@ class SellerSignInController extends GetxController{
           colorText: AppConstant.appTextColor);
     }
   }
+  Future<bool> checkAdminStatus(String userId) async {
+    try {
+      // Get user document from Firestore
+      DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firebaseFirestore.collection('seller').doc(userId).get();
+
+      // Check if user document exists and isAdmin field is true
+      if (userDoc.exists && userDoc.data()?['isAdmin'] == true) {
+        return true; // User is admin
+      } else {
+        return false; // User is not admin
+      }
+    } catch (e) {
+      // Handle any errors
+      print("Error checking admin status: $e");
+      return false; // Assume user is not admin in case of error
+    }
+  }
+
 }

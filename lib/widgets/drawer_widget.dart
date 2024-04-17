@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:seller_shop/screens/auth/seller/seller_logIn_screen.dart';
 import 'package:seller_shop/screens/auth/seller/seller_singUp_screen.dart';
 import 'package:seller_shop/screens/auth/seller/update_Profile_screen.dart';
 import 'package:seller_shop/screens/drower/company_screen.dart';
@@ -37,7 +38,7 @@ class DrawerWidget extends StatelessWidget {
                   try {
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context).pop(); // Close the dialog
-                    Get.to(SellerSingUpScreen());
+                    Get.to(SellerLoginScreen());
                   } catch (e) {
                     print("Error signing out: $e");
                     // Handle sign-out errors
