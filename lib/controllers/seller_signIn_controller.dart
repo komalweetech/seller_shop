@@ -14,10 +14,7 @@ class SellerSignInController extends GetxController{
   //for password visibilty
   static var  isPasswordVisibile = true.obs;
 
-  Future<UserCredential?> singInMethod(
-      String sellerEmail,
-      String sellerPassword,
-      ) async {
+  Future<UserCredential?> singInMethod(String sellerEmail, String sellerPassword,) async {
     try {
       EasyLoading.show(status: 'Please wait');
       UserCredential userCredential =

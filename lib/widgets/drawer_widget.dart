@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:seller_shop/screens/auth/seller/seller_logIn_screen.dart';
-import 'package:seller_shop/screens/auth/seller/seller_singUp_screen.dart';
 import 'package:seller_shop/screens/auth/seller/update_Profile_screen.dart';
 import 'package:seller_shop/screens/drower/company_screen.dart';
 import 'package:seller_shop/screens/drower/current_order_screen.dart';
@@ -11,47 +11,78 @@ import 'package:seller_shop/screens/drower/previous_order_screen.dart';
 import 'package:seller_shop/screens/drower/status_update_screen.dart';
 import 'package:seller_shop/utils/app_constant.dart';
 
-class DrawerWidget extends StatelessWidget {
+class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // log out dialog box
-    void _showSignOutDialog(BuildContext context) {
-      Navigator.of(context).pop();
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Sign Out'),
-            content: const Text('Are you sure you want to sign out?'),
-            actions: <Widget>[
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: AppConstant.appPrimaryColor),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: const Text('Cancel',style: TextStyle(color: AppConstant.appTextColor),),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pop(); // Close the dialog
-                    Get.to(SellerLoginScreen());
-                  } catch (e) {
-                    print("Error signing out: $e");
-                    // Handle sign-out errors
-                  }
-                },
-                child: Text('Sign Out'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+  State<DrawerWidget> createState() => _DrawerWidgetState();
+}
 
+class _DrawerWidgetState extends State<DrawerWidget> {
+ List<QuerySnapshot> seller = [];
+ late Map<String, dynamic> sellerData;
+
+ User? user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getSellerData();
+    print("user id == ${user!.uid}");
+  }
+
+ Future<void> getSellerData() async {
+   final user = FirebaseAuth.instance.currentUser;
+   if (user != null) {
+     final sellerDoc = await FirebaseFirestore.instance.collection('seller').doc().get();
+     if (sellerDoc.exists) {
+       setState(() {
+         sellerData = sellerDoc.data() as Map<String, dynamic>;
+       });
+       print(" seller data = ${sellerData}");
+
+     }
+   }
+ }
+
+  // log out dialog box
+  void _showSignOutDialog(BuildContext context) {
+    Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Sign Out'),
+          content: const Text('Are you sure you want to sign out?'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: AppConstant.appPrimaryColor),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel',style: TextStyle(color: AppConstant.appTextColor),),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.of(context).pop(); // Close the dialog
+                  Get.to(SellerLoginScreen());
+                } catch (e) {
+                  print("Error signing out: $e");
+                  // Handle sign-out errors
+                }
+              },
+              child: Text('Sign Out'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: Get.height / 25),
       child:  Drawer(
@@ -63,20 +94,20 @@ class DrawerWidget extends StatelessWidget {
         child: Wrap(
           runSpacing: 10,
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
                 title: Text(
-                  "Name",
+                  "qkdn",
                   style: TextStyle(color: AppConstant.appPrimaryColor,fontWeight: FontWeight.w700),
                 ),
-                subtitle: Text('Version 1.0.1',
-                    style: TextStyle(color: AppConstant.appPrimaryColor)),
                 leading: CircleAvatar(
                   radius: 22.0,
                   backgroundColor: AppConstant.appPrimaryColor,
-                  child: Text("W",
+                  child: Text(
+                    "c",
+                      // sellerName.isNotEmpty ? sellerName[0] : '',
                       style: TextStyle(color: AppConstant.appTextColor)),
                 ),
               ),
@@ -87,7 +118,7 @@ class DrawerWidget extends StatelessWidget {
               thickness: 1.5,
               color: Colors.grey,
             ),
-             Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
               ),
@@ -100,13 +131,13 @@ class DrawerWidget extends StatelessWidget {
                   color: AppConstant.appPrimaryColor,
                 ),
                 trailing:
-                    const Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                const Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
                 onTap: () {
                   Get.to(const UpdateProfileScreen());
                 },
               ),
             ),
-             Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
               ),
@@ -117,13 +148,13 @@ class DrawerWidget extends StatelessWidget {
                 leading: const Icon(Icons.production_quantity_limits,
                     color: AppConstant.appPrimaryColor),
                 trailing:
-                    const Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                const Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
                 onTap: () {
                   Get.to(const CurrentOrderScreen());
                 },
               ),
             ),
-             Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
               ),
@@ -132,15 +163,15 @@ class DrawerWidget extends StatelessWidget {
                 title: const Text("Previous Orders",
                     style: TextStyle(color: AppConstant.appPrimaryColor)),
                 leading:
-                    const Icon(Icons.add_shopping_cart, color: AppConstant.appPrimaryColor),
+                const Icon(Icons.add_shopping_cart, color: AppConstant.appPrimaryColor),
                 trailing:
-                    const Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                const Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
                 onTap: () {
                   Get.to(const PreviousOrderScreen());
                 },
               ),
             ),
-             Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
               ),
@@ -155,7 +186,7 @@ class DrawerWidget extends StatelessWidget {
                 },
               ),
             ),
-             Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
               ),
@@ -198,7 +229,7 @@ class DrawerWidget extends StatelessWidget {
                     style: TextStyle(color: AppConstant.appPrimaryColor)),
                 leading: Icon(Icons.logout, color: AppConstant.appPrimaryColor),
                 trailing:
-                    Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
+                Icon(Icons.arrow_forward, color: AppConstant.appPrimaryColor),
               ),
             ),
           ],

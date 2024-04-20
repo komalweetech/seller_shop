@@ -33,6 +33,9 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
       builder: (context, isKeyboardVisible) {
         return Scaffold(
           appBar: AppBar(
+            iconTheme: const IconThemeData(
+              color: AppConstant.appTextColor
+            ),
             backgroundColor: AppConstant.appSecondPrimaryColor,
             title: const Text(
               "SignIn",
