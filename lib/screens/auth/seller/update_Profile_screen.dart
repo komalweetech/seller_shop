@@ -58,7 +58,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
         setState(() {
           sellerName.text = data['name'] ?? '';
-          sellerPhone.text = data['phoneNumber'] ?? '';
+          sellerPhone.text = data['phone'] ?? '';
           sellerCity.text = data['city'] ?? '';
           sellerEmail.text = data['email'] ?? '';
           sellerPassword.text = data['password'] ?? '';
@@ -117,7 +117,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     onPressed: () async {
                       await FirebaseFirestore.instance.collection('seller').doc(FirebaseAuth.instance.currentUser!.uid).update({
                         'name': sellerName.text,
-                        'phoneNumber': sellerPhone.text,
+                        'phone': sellerPhone.text,
                         'city': sellerCity.text,
                         'email': sellerEmail.text,
                         'password': sellerPassword.text,

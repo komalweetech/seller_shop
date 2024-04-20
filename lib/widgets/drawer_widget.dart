@@ -19,31 +19,29 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
- List<QuerySnapshot> seller = [];
- late Map<String, dynamic> sellerData;
+  late String sellerName = '';
 
  User? user = FirebaseAuth.instance.currentUser;
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
-    getSellerData();
+    fetchSellerName();
     print("user id == ${user!.uid}");
   }
 
- Future<void> getSellerData() async {
-   final user = FirebaseAuth.instance.currentUser;
-   if (user != null) {
-     final sellerDoc = await FirebaseFirestore.instance.collection('seller').doc().get();
-     if (sellerDoc.exists) {
-       setState(() {
-         sellerData = sellerDoc.data() as Map<String, dynamic>;
-       });
-       print(" seller data = ${sellerData}");
+  // Fetch seller name from Firestore
+  void fetchSellerName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot doc = await FirebaseFirestore.instance.collection('seller').doc(user.uid).get();
+      setState(() {
+        sellerName = doc.get('name');
+      });
+    }
+    print("seller name == $sellerName");
+  }
 
-     }
-   }
- }
 
   // log out dialog box
   void _showSignOutDialog(BuildContext context) {
@@ -94,19 +92,19 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         child: Wrap(
           runSpacing: 10,
           children: [
-            Padding(
+             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
                 title: Text(
-                  "qkdn",
+                  sellerName,
                   style: TextStyle(color: AppConstant.appPrimaryColor,fontWeight: FontWeight.w700),
                 ),
                 leading: CircleAvatar(
                   radius: 22.0,
                   backgroundColor: AppConstant.appPrimaryColor,
                   child: Text(
-                    "c",
+                      sellerName.isNotEmpty ? sellerName[0] : '',
                       // sellerName.isNotEmpty ? sellerName[0] : '',
                       style: TextStyle(color: AppConstant.appTextColor)),
                 ),

@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:seller_shop/controllers/seller_signIn_controller.dart';
 import 'package:seller_shop/screens/auth/seller/forgotpassword_screen.dart';
+import 'package:seller_shop/screens/auth/seller/seller_singUp_screen.dart';
 import 'package:seller_shop/screens/home/dashboard_screen.dart';
 import 'package:seller_shop/utils/app_constant.dart';
 
