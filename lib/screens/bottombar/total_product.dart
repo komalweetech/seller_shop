@@ -138,15 +138,15 @@ class _TotalProductState extends State<TotalProduct> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete Item",style: TextStyle(fontWeight: FontWeight.w700),),
-          content: Text("Are you sure you want to delete this item?"),
+          title: const Text("Delete Item",style: TextStyle(fontWeight: FontWeight.w700),),
+          content: const Text("Are you sure you want to delete this item?"),
           actions: [
             ElevatedButton (
               style: ElevatedButton.styleFrom(backgroundColor: AppConstant.appPrimaryColor),
               onPressed: () {
                 Navigator.of(context).pop(); // Close AlertDialog
               },
-              child: Text("Cancel",style: TextStyle(color: AppConstant.appTextColor),),
+              child: const Text("Cancel",style: TextStyle(color: AppConstant.appTextColor),),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),

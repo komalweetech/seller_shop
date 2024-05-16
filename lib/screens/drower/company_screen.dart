@@ -20,7 +20,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
   final TextEditingController _nameController = TextEditingController();
 
   Future<void> addCompany() async {
-    await  Get.bottomSheet(
+    await Get.bottomSheet(
       Container(
         height: Get.height * 1.5,
         decoration: const BoxDecoration(
@@ -72,20 +72,21 @@ class _CompanyScreenState extends State<CompanyScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 15,),
+              const SizedBox(
+                height: 15,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppConstant.appPrimaryColor,
                 ),
                 onPressed: () {
-
                   String image = _imageController.text.trim();
                   String name = _nameController.text.trim();
 
                   if (image.isNotEmpty || name.isNotEmpty) {
                     // Add item to Firestore
                     _firestore.collection('companies').add({
-                      'companyImage' : image,
+                      'companyImage': image,
                       'companyName': name,
                     }).then((_) {
                       _imageController.clear();
@@ -149,8 +150,9 @@ class _CompanyScreenState extends State<CompanyScreen> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('companies').snapshots(),
-          builder: (context,snapshot) {
+          stream:
+              FirebaseFirestore.instance.collection('companies').snapshots(),
+          builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -160,45 +162,48 @@ class _CompanyScreenState extends State<CompanyScreen> {
             final companies = snapshot.data!.docs;
 
             return Padding(
-              padding:  EdgeInsets.only(top: 10,),
+              padding: EdgeInsets.only(
+                top: 10,
+              ),
               child: GridView.builder(
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 3 / 2, // Adjust as needed
+                  childAspectRatio: 3 / 3, // Adjust as needed
                 ),
                 itemCount: companies.length,
                 itemBuilder: (context, index) {
-                  final company = companies[index];
                   return Container(
-                    height: Get.height /2,
+                    height: Get.height / 1,
                     width: Get.width,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey[200],
+                      gradient: AppConstant.primaryGradient,
                     ),
-                    child:  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        CachedNetworkImage(
-                         height: Get.height / 10.7,
-                          imageUrl: companies[index]['companyImage'],
-                          errorWidget: (context, url, error) => Icon(Icons.error),
-                          fit: BoxFit.cover,
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 08),
+                          child: CachedNetworkImage(
+                            height: Get.height / 10.7,
+                            width: Get.width,
+                            imageUrl: companies[index]['companyImage'],
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.fill,
+                          ),
                         ),
-                        SizedBox(height: 05,),
                         Text(
                           companies[index]['companyName'],
                           style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black
-                          ),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
-                        SizedBox(height: 05,),
                       ],
                     ),
                   );

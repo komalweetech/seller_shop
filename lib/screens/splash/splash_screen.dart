@@ -63,7 +63,7 @@ User? user = FirebaseAuth.instance.currentUser;
             Expanded(
               child: ColorFiltered(
                 colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                child: Lottie.asset("assets/images/splash.json",),
+                child:  Lottie.asset("assets/images/splash.json",),
               ),
             ),
             Padding(

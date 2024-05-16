@@ -49,7 +49,7 @@ class _CardWidgetState extends State<CardWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.amount!,style: TextStyle(color: Colors.black),),
+                      Text("\$ ${widget.amount!}",style: TextStyle(color: Colors.black),),
                     ],
                   ),
                 )

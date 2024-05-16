@@ -26,7 +26,8 @@ class _ChartScreenState extends State<ChartScreen> {
 
   Future<void> fetchProductData() async {
     try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('items').get();
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(
+          'items').get();
 
       // Clear the existing chartData list
       chartData.clear();
@@ -53,12 +54,14 @@ class _ChartScreenState extends State<ChartScreen> {
       print('Error fetching product data: $e');
     }
   }
+
   Future<int> getTotalOrdersForProduct(String productId) async {
     int totalOrders = 0;
 
     try {
       // Query the 'orders' collection to get total orders for the specified product
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('orders').where('productId', isEqualTo: productId).get();
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(
+          'orders').where('productId', isEqualTo: productId).get();
 
       // Calculate total order count
       totalOrders = querySnapshot.size;
@@ -69,12 +72,14 @@ class _ChartScreenState extends State<ChartScreen> {
 
     return totalOrders;
   }
+
   Future<double> getTotalProfitForProduct(String productId) async {
     double totalProfit = 0.0;
 
     try {
       // Query the 'orders' collection to get total profit for the specified product
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('orders').where('productId', isEqualTo: productId).get();
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(
+          'orders').where('productId', isEqualTo: productId).get();
 
       // Iterate through the documents and sum up the profits
       querySnapshot.docs.forEach((doc) {
@@ -91,7 +96,6 @@ class _ChartScreenState extends State<ChartScreen> {
   }
 
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -102,36 +106,51 @@ class _ChartScreenState extends State<ChartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body:
-        Container(
+        body: Container(
           margin: EdgeInsets.all(10),
-          child: SfCartesianChart(
-        primaryXAxis: CategoryAxis(),
-            legend: Legend(isVisible: true),
-            title: ChartTitle(text: 'Sales Data'),
-            series: [
-              ColumnSeries<SalesData, int>(
-                pointColorMapper: (SalesData color,_) => AppConstant.appPrimaryColor ,
-                legendItemText: 'Product Orders',
-                dataSource: chartData,
-                  xValueMapper: (SalesData product,_) => product.product,
-                  yValueMapper: (SalesData orders,_) => orders.totalOrders),
+          child: FutureBuilder(
+            future: fetchProductData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                return SfCartesianChart(
+                  primaryXAxis: const CategoryAxis(),
+                  legend: Legend(isVisible: true),
+                  title: ChartTitle(text: 'Sales Data'),
+                  series: [
+                    ColumnSeries<SalesData, int>(
+                      dataSource: chartData,
+                      xValueMapper: (SalesData product, _) => product.product,
+                      yValueMapper: (SalesData orders, _) => orders.totalOrders,
+                      pointColorMapper: (SalesData color, _) =>
+                      AppConstant.appPrimaryColor,
+                      name: 'Product Orders',),
 
 
-             AreaSeries<SalesData, int>(
-                  pointColorMapper: (SalesData color,_) => AppConstant.appPrimaryColor ,
-                  legendItemText: 'Product Sales',
-                  dataSource: chartData,
-                  xValueMapper: (SalesData product,_) => product.product,
-                  yValueMapper: (SalesData profit,_) => profit.profit),
+                    AreaSeries<SalesData, int>(
+
+                      dataSource: chartData,
+                      xValueMapper: (SalesData product, _) => product.product,
+                      yValueMapper: (SalesData profit, _) => profit.profit,
+                      pointColorMapper: (SalesData color, _) =>
+                      AppConstant.appPrimaryColor,
+                      name: 'Product Sales',
+                    ),
 
 
-            ],
-          ) ,
+                  ],
+                );
+            }
+            },
+          ),
         )
     );
   }
 }
+
 class SalesData {
   final int product;
   final int totalOrders;

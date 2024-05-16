@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:seller_shop/screens/home/dashboard_screen.dart';
 import 'package:seller_shop/utils/app_constant.dart';
 
 class AddProducts extends StatefulWidget {
@@ -59,8 +60,6 @@ class _AddProductsState extends State<AddProducts> {
         'productDescription': description,
         'createdAt' : createAt,
         'updatedAt' : updatedAt,
-
-
       }).then((_) {
         // Clear text fields after successful addition
         _image0Controller.clear();
@@ -77,7 +76,13 @@ class _AddProductsState extends State<AddProducts> {
         Get.snackbar("Item", "Item added successfully",
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: AppConstant.appSecondPrimaryColor,
-            colorText: AppConstant.appTextColor);
+            colorText: AppConstant.appTextColor,
+            duration: Duration(seconds: 2),
+            );
+        Future.delayed(Duration(seconds: 2), () {
+          Get.offAll(DashBoardScreen());
+        });
+
       }).catchError((error) {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
@@ -91,6 +96,7 @@ class _AddProductsState extends State<AddProducts> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
